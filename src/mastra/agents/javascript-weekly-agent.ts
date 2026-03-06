@@ -2,6 +2,7 @@ import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
 import { fetchNewsletterTool } from "../tools/fetch-newsletter";
 import { fetchArticleTool } from "../tools/fetch-article";
+import { postSlackTool } from "../tools/post-slack";
 
 export const javascriptWeeklyAgent = new Agent({
   id: "javascript-weekly-agent",
@@ -53,8 +54,13 @@ export const javascriptWeeklyAgent = new Agent({
     ⭐⭐⭐☆☆ 知識として持っておく価値がある
     ⭐⭐☆☆☆ 参考程度・関心があれば読む
     ⭐☆☆☆☆ ほぼ除外対象だが一応含めた記事
+
+    # Slack 投稿手順
+    Slack に投稿する場合は以下の順序で post-slack ツールを呼び出す：
+    1. まず親メッセージ（週次まとめの見出し＋件数）を投稿し、返却された ts を保存する
+    2. 各記事を上記フォーマットで1件ずつスレッドに投稿する（threadTs に親メッセージの ts を指定）
   `,
   model: "openai/gpt-5-mini",
-  tools: { fetchNewsletterTool, fetchArticleTool },
+  tools: { fetchNewsletterTool, fetchArticleTool, postSlackTool },
   memory: new Memory(),
 });
