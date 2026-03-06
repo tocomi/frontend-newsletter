@@ -1,6 +1,7 @@
 import { Mastra } from '@mastra/core/mastra'
 import { PinoLogger } from '@mastra/loggers'
 import { LibSQLStore } from '@mastra/libsql'
+import { Memory } from '@mastra/memory'
 import {
   Observability,
   DefaultExporter,
@@ -16,19 +17,23 @@ import {
   translationScorer,
 } from './scorers/weather-scorer'
 
+const storage = new LibSQLStore({
+  id: 'mastra-storage',
+  url: 'file:./mastra.db',
+})
+
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
   agents: { weatherAgent, javascriptWeeklyAgent },
+  memory: {
+    default: new Memory({ storage }),
+  },
   scorers: {
     toolCallAppropriatenessScorer,
     completenessScorer,
     translationScorer,
   },
-  storage: new LibSQLStore({
-    id: 'mastra-storage',
-    // stores observability, scores, ... into persistent file storage
-    url: 'file:./mastra.db',
-  }),
+  storage,
   logger: new PinoLogger({
     name: 'Mastra',
     level: 'info',
@@ -38,11 +43,11 @@ export const mastra = new Mastra({
       default: {
         serviceName: 'mastra',
         exporters: [
-          new DefaultExporter(), // Persists traces to storage for Mastra Studio
-          new CloudExporter(), // Sends traces to Mastra Cloud (if MASTRA_CLOUD_ACCESS_TOKEN is set)
+          new DefaultExporter(),
+          new CloudExporter(),
         ],
         spanOutputProcessors: [
-          new SensitiveDataFilter(), // Redacts sensitive data like passwords, tokens, keys
+          new SensitiveDataFilter(),
         ],
       },
     },

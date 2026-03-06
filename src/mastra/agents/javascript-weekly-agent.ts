@@ -1,4 +1,6 @@
 import { Agent } from "@mastra/core/agent";
+import { Memory } from "@mastra/memory";
+import { fetchNewsletterTool } from "../tools/fetch-newsletter";
 
 export const javascriptWeeklyAgent = new Agent({
   id: "javascript-weekly-agent",
@@ -37,18 +39,8 @@ export const javascriptWeeklyAgent = new Agent({
 
     おすすめ度: ⭐⭐⭐⭐☆
 
-    ## 評価軸
-    - 影響度：（このニュースがエコシステム・プロジェクトに与えるインパクト）
-    - 実装価値：（実際のコードに活かせる度合い）
-    - 新規性：（新しいアイデア・技術かどうか）
-    - 学習価値：（読んで得られる知識・理解の深さ）
-
     ## 要約
-    1. 何が発表/更新されたか
-    2. 重要なポイント
-    3. 対象読者/影響範囲
-    4. 補足/背景
-    5. 今後の展望
+    何が発表・更新されたか、重要なポイント、補足・背景、今後の展望を文章でまとめる。
 
     ## リンク
     元記事：https://...
@@ -62,5 +54,6 @@ export const javascriptWeeklyAgent = new Agent({
     ⭐☆☆☆☆ ほぼ除外対象だが一応含めた記事
   `,
   model: "openai/gpt-5-mini",
-  tools: {},
+  tools: { fetchNewsletterTool },
+  memory: new Memory(),
 });
