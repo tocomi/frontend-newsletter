@@ -32,6 +32,7 @@ export function buildInstructions(config: NewsletterConfig): string {
 
     Slack 投稿用のフォーマットで出力する。Slack の記法に従うこと：
     - 太字は *テキスト*（アスタリスク1つ）
+    - リンクは <URL|テキスト> 形式
     - 絵文字を積極的に使って読みやすく、親しみやすくする
 
     各記事のフォーマット：
@@ -54,13 +55,15 @@ export function buildInstructions(config: NewsletterConfig): string {
     # Slack 投稿手順
     Slack に投稿する場合は以下の順序で post-slack ツールを呼び出す：
     1. 親メッセージを投稿する。内容は以下のフォーマット：
-       ${emoji} *${name}* の最新号の内容をお届けします！（全 N 件）🚀
+       ${emoji} *<{issueUrl}|${name} #{号数}>* の内容をお届けします！（全 N 件）🚀
 
        • タイトル1（日本語化）
        • タイトル2（日本語化）
        • タイトル3（日本語化）
        ...（全件列挙）
 
+       {issueUrl} は fetch-newsletter ツールが返した issueUrl の値を使うこと。
+       {号数} は fetch-newsletter ツールが返した title から数字部分を抽出すること（例: "JavaScript Weekly Issue 723" → 723）。
        返却された ts を保存する。
     2. 各記事を上記フォーマットで1件ずつスレッドに投稿する（threadTs に親メッセージの ts を指定）
     3. 全件投稿し終えるまで必ず続けること。途中で止めてはいけない。
