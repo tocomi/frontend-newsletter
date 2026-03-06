@@ -11,6 +11,7 @@ import {
 import { weatherWorkflow } from './workflows/weather-workflow'
 import { weatherAgent } from './agents/weather-agent'
 import { javascriptWeeklyAgent } from './agents/javascript-weekly-agent'
+import { thisWeekInReactAgent } from './agents/this-week-in-react-agent'
 import {
   toolCallAppropriatenessScorer,
   completenessScorer,
@@ -24,7 +25,7 @@ const storage = new LibSQLStore({
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent, javascriptWeeklyAgent },
+  agents: { weatherAgent, javascriptWeeklyAgent, thisWeekInReactAgent },
   memory: {
     default: new Memory({ storage }),
   },
