@@ -85,3 +85,7 @@ Skills are automatically available to agents in your project once installed. Age
 
 - [Mastra Documentation](https://mastra.ai/llms.txt)
 - [Mastra .well-known skills discovery](https://mastra.ai/.well-known/skills/index.json)
+
+## Design Document
+
+For the design and requirements of this project, see [docs/design.md](./docs/design.md).
