@@ -2,7 +2,8 @@
 
 ## 概要
 
-This Week in React と JavaScript Weekly の最新号を自動取得し、関連記事をピックアップ・要約して Slack に投稿する Mastra エージェント。
+JavaScript Weekly と This Week in React の最新号を自動取得し、関連記事をピックアップ・要約して Slack に投稿する Mastra エージェント群。
+各ニュースレターごとに専用エージェントを持つ構成とする。
 
 ---
 
@@ -17,7 +18,7 @@ This Week in React と JavaScript Weekly の最新号を自動取得し、関連
        ↓
 [各記事の本文取得（URL スクレイピング）]
        ↓
-[記事の要約・おすすめ度判定（Claude）]
+[記事の要約・おすすめ度判定（OpenAI）]
        ↓
 [Slack 投稿（親メッセージ + スレッド）]
 ```
@@ -29,14 +30,15 @@ This Week in React と JavaScript Weekly の最新号を自動取得し、関連
 ```
 src/mastra/
 ├── agents/
-│   └── newsletter-agent.ts             # メインエージェント
+│   ├── javascript-weekly-agent.ts      # JavaScript Weekly 専用エージェント
+│   └── this-week-in-react-agent.ts     # This Week in React 専用エージェント（予定）
 ├── tools/
-│   ├── fetch-newsletter.ts             # ニュースレター取得ツール
-│   ├── fetch-article.ts                # 記事本文取得ツール
-│   └── post-slack.ts                   # Slack 投稿ツール
+│   ├── fetch-newsletter.ts             # ニュースレター取得ツール（予定）
+│   ├── fetch-article.ts                # 記事本文取得ツール（予定）
+│   └── post-slack.ts                   # Slack 投稿ツール（予定）
 ├── workflows/
-│   ├── this-week-in-react-workflow.ts  # This Week in React ワークフロー
-│   └── javascript-weekly-workflow.ts   # JavaScript Weekly ワークフロー
+│   ├── javascript-weekly-workflow.ts   # JavaScript Weekly ワークフロー（予定）
+│   └── this-week-in-react-workflow.ts  # This Week in React ワークフロー（予定）
 └── index.ts
 ```
 
@@ -44,10 +46,10 @@ src/mastra/
 
 ## ニュースレター
 
-| 名前 | URL |
-|------|-----|
-| This Week in React | https://thisweekinreact.com/newsletter |
-| JavaScript Weekly | https://javascriptweekly.com/issues/latest |
+| 名前 | URL | エージェント |
+|------|-----|-------------|
+| JavaScript Weekly | https://javascriptweekly.com/issues/latest | `javascript-weekly-agent` |
+| This Week in React | https://thisweekinreact.com/newsletter | `this-week-in-react-agent`（予定） |
 
 最新号の取得は各サイトの RSS フィードを利用する。
 
@@ -55,16 +57,31 @@ src/mastra/
 
 ## ピックアップ基準
 
-### 含めるトピック
+### JavaScript Weekly
 
+#### 含めるトピック
+- JavaScript / TypeScript
+- Vite / Rolldown / OXC / Biome などフロントエンドエコシステム周辺ツール
+- ブラウザ拡張機能開発
+- ブラウザ自体の新機能（Chrome / Firefox / Safari など）
+- Web 周辺の話題全般
+
+#### 除外するトピック
+- スポンサー広告・プロモーション記事
+- Vue.js / Angular 関連
+- モバイルアプリ固有の話題（Expo, Capacitor など）
+- 同一トピックの重複記事（代表1つに絞る）
+
+### This Week in React（予定）
+
+#### 含めるトピック
 - React / TypeScript
 - Vite / Rolldown / OXC / Biome などフロントエンドエコシステム周辺ツール
 - ブラウザ拡張機能開発
 - ブラウザ自体の新機能（Chrome / Firefox / Safari など）
 - Web 周辺の話題全般
 
-### 除外するトピック
-
+#### 除外するトピック
 - スポンサー広告・プロモーション記事
 - React Native 固有の話題
 - Vue.js / Angular 関連
@@ -126,7 +143,7 @@ src/mastra/
 
 - 内容：週次まとめの見出し + 件数
 - トーン：ユーモア・温かみのある文体
-- 例：`🗞️ 今週もフロントエンド界隈が騒がしかったよ！厳選 N 件をお届けします 🚀`
+- 例：`🗞️ 今週も JS 界隈が騒がしかったよ！厳選 N 件をお届けします 🚀`
 
 ### スレッドメッセージ
 
@@ -138,14 +155,14 @@ src/mastra/
 
 ## ツール定義
 
-### `fetch-newsletter`
+### `fetch-newsletter`（予定）
 
 ニュースレターの最新号を RSS フィードから取得し、記事リストを返す。
 
 **入力**
 ```ts
 {
-  source: 'this-week-in-react' | 'javascript-weekly'
+  source: 'javascript-weekly' | 'this-week-in-react'
 }
 ```
 
@@ -162,7 +179,7 @@ src/mastra/
 }
 ```
 
-### `fetch-article`
+### `fetch-article`（予定）
 
 記事の URL にアクセスして本文を取得する。
 
@@ -182,7 +199,7 @@ src/mastra/
 }
 ```
 
-### `post-slack`
+### `post-slack`（予定）
 
 Slack にメッセージを投稿する。スレッド投稿にも対応。
 
@@ -204,14 +221,14 @@ Slack にメッセージを投稿する。スレッド投稿にも対応。
 
 ---
 
-## ワークフロー
+## ワークフロー（予定）
 
-2つのニュースレターはそれぞれ独立したワークフローとして実装する。
+各ニュースレターはそれぞれ独立したワークフローとして実装する。
 
-### this-week-in-react-workflow
+### javascript-weekly-workflow
 
 ```
-Step 1: fetch-newsletter（This Week in React）
+Step 1: fetch-newsletter（JavaScript Weekly）
 Step 2: 記事リストのフィルタリング
 Step 3: fetch-article × N（各記事の本文取得）
 Step 4: OpenAI による要約・おすすめ度判定
@@ -219,10 +236,10 @@ Step 5: post-slack（親メッセージ投稿）
 Step 6: post-slack × N（各記事をスレッドに投稿）
 ```
 
-### javascript-weekly-workflow
+### this-week-in-react-workflow（予定）
 
 ```
-Step 1: fetch-newsletter（JavaScript Weekly）
+Step 1: fetch-newsletter（This Week in React）
 Step 2: 記事リストのフィルタリング
 Step 3: fetch-article × N（各記事の本文取得）
 Step 4: OpenAI による要約・おすすめ度判定
