@@ -1,6 +1,7 @@
 import { Agent } from "@mastra/core/agent";
 import { Memory } from "@mastra/memory";
 import { fetchNewsletterTool } from "../tools/fetch-newsletter";
+import { fetchArticleTool } from "../tools/fetch-article";
 
 export const javascriptWeeklyAgent = new Agent({
   id: "javascript-weekly-agent",
@@ -54,6 +55,6 @@ export const javascriptWeeklyAgent = new Agent({
     ⭐☆☆☆☆ ほぼ除外対象だが一応含めた記事
   `,
   model: "openai/gpt-5-mini",
-  tools: { fetchNewsletterTool },
+  tools: { fetchNewsletterTool, fetchArticleTool },
   memory: new Memory(),
 });
