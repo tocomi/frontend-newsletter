@@ -62,8 +62,12 @@ export const javascriptWeeklyAgent = new Agent({
        - 内容: 「🗞️ *JavaScript Weekly* の最新号の内容をお届けします！（全 N 件）🚀」
        - 返却された ts を保存する
     2. 各記事を上記フォーマットで1件ずつスレッドに投稿する（threadTs に親メッセージの ts を指定）
+    3. 全件投稿し終えるまで必ず続けること。途中で止めてはいけない。
   `,
   model: "openai/gpt-5-mini",
   tools: { fetchNewsletterTool, fetchArticleTool, postSlackTool },
   memory: new Memory(),
+  defaultOptions: {
+    maxSteps: 50,
+  },
 });
