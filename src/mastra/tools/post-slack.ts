@@ -28,7 +28,12 @@ export const postSlackTool = createTool({
       throw new Error('SLACK_BOT_TOKEN または SLACK_CHANNEL_ID が設定されていません')
     }
 
-    const body: Record<string, string> = { channel, text }
+    const body: Record<string, string | boolean> = {
+      channel,
+      text,
+      unfurl_links: false,
+      unfurl_media: false,
+    }
     if (threadTs) {
       body['thread_ts'] = threadTs
     }
