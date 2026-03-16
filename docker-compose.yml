@@ -1,0 +1,15 @@
+services:
+  api:
+    build: .
+    ports:
+      - "4111:4111"
+    env_file:
+      - .env
+    environment:
+      - DATABASE_URL=file:./data/mastra.db
+    volumes:
+      - mastra_data:/app/.mastra/output/data
+    restart: unless-stopped
+
+volumes:
+  mastra_data:

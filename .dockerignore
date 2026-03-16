@@ -1,0 +1,12 @@
+node_modules
+.mastra
+dist
+.env
+.env.*
+*.db
+*.db-*
+.git
+.gitignore
+.serena
+docs
+output.txt

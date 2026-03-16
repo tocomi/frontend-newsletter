@@ -20,7 +20,7 @@ import {
 
 const storage = new LibSQLStore({
   id: 'mastra-storage',
-  url: 'file:./mastra.db',
+  url: process.env.DATABASE_URL ?? 'file:./mastra.db',
 })
 
 export const mastra = new Mastra({
