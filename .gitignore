@@ -8,3 +8,6 @@ dist
 *.db-*
 .netlify
 .vercel
+
+# Mac
+.DS_Store
