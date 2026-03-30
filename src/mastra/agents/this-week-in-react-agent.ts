@@ -11,7 +11,6 @@ export const thisWeekInReactAgent = new Agent({
   instructions: THIS_WEEK_IN_REACT_INSTRUCTIONS,
   model: "openai/gpt-5-mini",
   tools: { fetchNewsletterTool, fetchArticleTool, postSlackTool },
-  memory: new Memory(),
   defaultOptions: {
     maxSteps: 50,
   },

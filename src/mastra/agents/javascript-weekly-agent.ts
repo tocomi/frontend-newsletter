@@ -11,7 +11,6 @@ export const javascriptWeeklyAgent = new Agent({
   instructions: JAVASCRIPT_WEEKLY_INSTRUCTIONS,
   model: "openai/gpt-5-mini",
   tools: { fetchNewsletterTool, fetchArticleTool, postSlackTool },
-  memory: new Memory(),
   defaultOptions: {
     maxSteps: 50,
   },
