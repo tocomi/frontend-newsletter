@@ -32,13 +32,17 @@ export const fetchNewsletterTool = createTool({
   }),
   execute: async ({ source }) => {
     const feedUrl = RSS_FEEDS[source]
+    console.log(`[fetch-newsletter] RSS フェッチ開始: source=${source}, url=${feedUrl}`)
+
     const feed = await parser.parseURL(feedUrl)
+    console.log(`[fetch-newsletter] RSS フェッチ完了: ${feed.items.length}件取得`)
 
     const latest = feed.items[0]
     if (!latest) {
       throw new Error(`${source} の RSS に記事が見つかりませんでした`)
     }
 
+    console.log(`[fetch-newsletter] 最新号: title="${latest.title}", url=${latest.link}`)
     return {
       title: latest.title ?? '',
       issueUrl: latest.link ?? feedUrl,

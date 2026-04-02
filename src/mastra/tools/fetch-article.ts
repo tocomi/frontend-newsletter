@@ -14,6 +14,7 @@ export const fetchArticleTool = createTool({
     url: z.string().describe('記事の URL'),
   }),
   execute: async ({ url }) => {
+    console.log(`[fetch-article] 記事フェッチ開始: url=${url}`)
     const response = await fetch(url, {
       headers: {
         'User-Agent':
@@ -22,9 +23,11 @@ export const fetchArticleTool = createTool({
     })
 
     if (!response.ok) {
+      console.error(`[fetch-article] フェッチ失敗: status=${response.status}, url=${url}`)
       throw new Error(`Failed to fetch ${url}: ${response.status}`)
     }
 
+    console.log(`[fetch-article] フェッチ成功: status=${response.status}, url=${url}`)
     const html = await response.text()
     const root = parse(html)
 
@@ -49,6 +52,7 @@ export const fetchArticleTool = createTool({
       .replace(/\n{3,}/g, '\n\n') // 連続する空行を整理
       .trim()
 
+    console.log(`[fetch-article] パース完了: title="${title}", contentLength=${content.length}文字`)
     return { title, content, url }
   },
 })
