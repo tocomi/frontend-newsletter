@@ -52,6 +52,10 @@ export function buildInstructions(config: NewsletterConfig): string {
     ⭐⭐☆☆☆ 参考程度・関心があれば読む
     ⭐☆☆☆☆ ほぼ除外対象だが一応含めた記事
 
+    # レートリミット対策
+    各記事のサマライズ後、次の記事に進む前に wait ツールを呼び出して 10 秒待機すること。
+    これは API のレートリミットを避けるために必須の手順である。
+
     # Slack 投稿手順
     Slack に投稿する場合は以下の順序で post-slack ツールを呼び出す：
     1. 親メッセージを投稿する。内容は以下のフォーマット：
