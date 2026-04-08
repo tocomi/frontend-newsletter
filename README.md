@@ -45,21 +45,17 @@ Slack App に以下の Bot Token Scope が必要:
 
 Bot を投稿先チャンネルに招待しておくこと。
 
-### 3. 開発サーバーの起動
+### 3. エージェントの実行
+
+各ニュースレターのスクリプトを実行する。
 
 ```bash
-pnpm run dev
+# JavaScript Weekly
+pnpm run:js-weekly
+
+# This Week in React
+pnpm run:react
 ```
-
-[http://localhost:4111](http://localhost:4111) で Mastra Studio が起動する。
-
-### 4. エージェントの実行
-
-Mastra Studio を開き、以下の手順で実行する。
-
-1. サイドバーから対象のエージェント（例: `javascript-weekly-agent`）を選択
-2. チャット入力欄に `Slack に投稿してください` と入力
-3. エージェントが記事の取得・要約・Slack 投稿を順に実行する
 
 投稿が成功すると、設定した Slack チャンネルに親メッセージと各記事のスレッドが届く。
 
