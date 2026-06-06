@@ -2,8 +2,8 @@
 
 ## 概要
 
-JavaScript Weekly と This Week in React の最新号を自動取得し、関連記事をピックアップ・要約して Slack に投稿する Mastra エージェント群。
-各ニュースレターごとに専用エージェントを持つ構成とする。
+JavaScript Weekly、This Week in React、はてなブックマーク テクノロジー人気エントリーを自動取得し、関連記事をピックアップ・要約して Slack に投稿する Mastra エージェント群。
+各ニュースレター・情報源ごとに専用エージェントを持つ構成とする。
 
 ---
 
@@ -31,11 +31,13 @@ JavaScript Weekly と This Week in React の最新号を自動取得し、関連
 src/mastra/
 ├── agents/
 │   ├── javascript-weekly-agent.ts      # JavaScript Weekly 専用エージェント
-│   └── this-week-in-react-agent.ts     # This Week in React 専用エージェント（予定）
+│   ├── this-week-in-react-agent.ts     # This Week in React 専用エージェント
+│   └── hatena-bookmark-agent.ts        # はてなブックマーク 専用エージェント
 ├── tools/
-│   ├── fetch-newsletter.ts             # ニュースレター取得ツール（予定）
-│   ├── fetch-article.ts                # 記事本文取得ツール（予定）
-│   └── post-slack.ts                   # Slack 投稿ツール（予定）
+│   ├── fetch-newsletter.ts             # ニュースレター取得ツール
+│   ├── fetch-hatena-hotentry.ts        # はてなブックマーク人気エントリー取得ツール
+│   ├── fetch-article.ts                # 記事本文取得ツール
+│   └── post-slack.ts                   # Slack 投稿ツール
 ├── workflows/
 │   ├── javascript-weekly-workflow.ts   # JavaScript Weekly ワークフロー（予定）
 │   └── this-week-in-react-workflow.ts  # This Week in React ワークフロー（予定）
@@ -46,12 +48,13 @@ src/mastra/
 
 ## ニュースレター
 
-| 名前 | URL | エージェント |
-|------|-----|-------------|
-| JavaScript Weekly | https://javascriptweekly.com/issues/latest | `javascript-weekly-agent` |
-| This Week in React | https://thisweekinreact.com/newsletter | `this-week-in-react-agent`（予定） |
+| 名前                            | URL                                        | エージェント               |
+| ------------------------------- | ------------------------------------------ | -------------------------- |
+| JavaScript Weekly               | https://javascriptweekly.com/issues/latest | `javascript-weekly-agent`  |
+| This Week in React              | https://thisweekinreact.com/newsletter     | `this-week-in-react-agent` |
+| はてなブックマーク テクノロジー | https://b.hatena.ne.jp/hotentry/it         | `hatena-bookmark-agent`    |
 
-最新号の取得は各サイトの RSS フィードを利用する。
+最新号・候補記事の取得は各サイトの RSS フィードを利用する。
 
 ---
 
@@ -60,6 +63,7 @@ src/mastra/
 ### JavaScript Weekly
 
 #### 含めるトピック
+
 - JavaScript / TypeScript
 - Vite / Rolldown / OXC / Biome などフロントエンドエコシステム周辺ツール
 - ブラウザ拡張機能開発
@@ -67,6 +71,7 @@ src/mastra/
 - Web 周辺の話題全般
 
 #### 除外するトピック
+
 - スポンサー広告・プロモーション記事
 - Vue.js / Angular 関連
 - モバイルアプリ固有の話題（Expo, Capacitor など）
@@ -75,6 +80,7 @@ src/mastra/
 ### This Week in React（予定）
 
 #### 含めるトピック
+
 - React / TypeScript
 - Vite / Rolldown / OXC / Biome などフロントエンドエコシステム周辺ツール
 - ブラウザ拡張機能開発
@@ -82,11 +88,40 @@ src/mastra/
 - Web 周辺の話題全般
 
 #### 除外するトピック
+
 - スポンサー広告・プロモーション記事
 - React Native 固有の話題
 - Vue.js / Angular 関連
 - モバイルアプリ固有の話題（Expo, Capacitor など）
 - 同一トピックの重複記事（代表1つに絞る）
+
+### はてなブックマーク テクノロジー
+
+#### 含めるトピック
+
+- ソフトウェア開発の実務に役立つ知見
+- プログラミング言語 / フレームワーク / ライブラリ
+- AI coding / 開発生産性 / エージェント活用
+- 設計 / アーキテクチャ / テスト / 保守性
+- セキュリティ / インフラ / 運用 / 障害対応
+- ブラウザ / Web / フロントエンド / バックエンド
+- 公式リリース、技術解説、実践的な事例
+
+#### 除外するトピック
+
+- 広告・PR・ウェビナー・採用・イベント告知が主目的の記事
+- ガジェット、ゲーム、エンタメ、投資、ビジネスニュース寄りの記事
+- AI業界ニュースだけで、実装・設計・運用に落ちない記事
+- 炎上、感想、読み物として面白いだけの記事
+- 内容が薄いまとめ記事、煽りタイトル、過度にマーケティング色の強い記事
+
+#### 選別方針
+
+- `https://b.hatena.ne.jp/hotentry/it.rss` から人気エントリー上位30件を候補として取得する
+- ブックマークコメントは評価材料に含めない
+- 記事本文の取得に失敗した記事はスキップする
+- 最終的に5件だけ Slack に投稿する
+- 初期実装では日をまたいだ重複排除は行わない
 
 ---
 
@@ -108,22 +143,24 @@ src/mastra/
 おすすめ度: ⭐⭐⭐⭐☆
 
 ## 要約
+
 何が発表・更新されたか、重要なポイント、補足・背景、今後の展望を文章でまとめる。
 
 ## リンク
+
 元記事：https://...
 関連：https://...
 ```
 
 ### おすすめ度の基準
 
-| 度 | 基準 |
-|----|------|
+| 度         | 基準                                 |
+| ---------- | ------------------------------------ |
 | ⭐⭐⭐⭐⭐ | 今すぐ確認すべき重大な変更・リリース |
-| ⭐⭐⭐⭐☆ | 実装・設計に直結する有益な情報 |
-| ⭐⭐⭐☆☆ | 知識として持っておく価値がある |
-| ⭐⭐☆☆☆ | 参考程度・関心があれば読む |
-| ⭐☆☆☆☆ | ほぼ除外対象だが一応含めた記事 |
+| ⭐⭐⭐⭐☆  | 実装・設計に直結する有益な情報       |
+| ⭐⭐⭐☆☆   | 知識として持っておく価値がある       |
+| ⭐⭐☆☆☆    | 参考程度・関心があれば読む           |
+| ⭐☆☆☆☆     | ほぼ除外対象だが一応含めた記事       |
 
 ---
 
@@ -145,11 +182,12 @@ src/mastra/
 
 ## ツール定義
 
-### `fetch-newsletter`（予定）
+### `fetch-newsletter`
 
-ニュースレターの最新号を RSS フィードから取得し、記事リストを返す。
+ニュースレターの最新号を RSS フィードから取得し、タイトル・URL・本文を返す。
 
 **入力**
+
 ```ts
 {
   source: 'javascript-weekly' | 'this-week-in-react'
@@ -157,23 +195,51 @@ src/mastra/
 ```
 
 **出力**
+
 ```ts
 {
-  title: string       // ニュースレターのタイトル
-  issueUrl: string    // 今号の URL
-  articles: Array<{
+  title: string // ニュースレターのタイトル
+  issueUrl: string // 今号の URL
+  content: string // 今号の本文 HTML
+}
+```
+
+### `fetch-hatena-hotentry`
+
+はてなブックマーク テクノロジー人気エントリーの RSS から候補記事を返す。
+
+**入力**
+
+```ts
+{
+  limit: number // 通常は30
+}
+```
+
+**出力**
+
+```ts
+{
+  sourceTitle: string
+  sourceUrl: string
+  feedUrl: string
+  entries: Array<{
     title: string
     url: string
-    description?: string
+    entryUrl: string
+    bookmarkCount: number
+    tags: string[]
+    postedAt: string
   }>
 }
 ```
 
-### `fetch-article`（予定）
+### `fetch-article`
 
 記事の URL にアクセスして本文を取得する。
 
 **入力**
+
 ```ts
 {
   url: string
@@ -181,19 +247,21 @@ src/mastra/
 ```
 
 **出力**
+
 ```ts
 {
   title: string
-  content: string    // 本文テキスト
+  content: string // 本文テキスト
   url: string
 }
 ```
 
-### `post-slack`（予定）
+### `post-slack`
 
 Slack にメッセージを投稿する。スレッド投稿にも対応。
 
 **入力**
+
 ```ts
 {
   channel: string
@@ -203,9 +271,10 @@ Slack にメッセージを投稿する。スレッド投稿にも対応。
 ```
 
 **出力**
+
 ```ts
 {
-  ts: string         // 投稿したメッセージのタイムスタンプ（スレッド起点に使う）
+  ts: string // 投稿したメッセージのタイムスタンプ（スレッド起点に使う）
 }
 ```
 
@@ -241,11 +310,11 @@ Step 6: post-slack × N（各記事をスレッドに投稿）
 
 ## 環境変数
 
-| 変数名 | 説明 |
-|--------|------|
-| `SLACK_BOT_TOKEN` | Slack Bot Token（`xoxb-...`） |
-| `SLACK_CHANNEL_ID` | 投稿先チャンネルの ID |
-| `OPENAI_API_KEY` | OpenAI API キー |
+| 変数名             | 説明                          |
+| ------------------ | ----------------------------- |
+| `SLACK_BOT_TOKEN`  | Slack Bot Token（`xoxb-...`） |
+| `SLACK_CHANNEL_ID` | 投稿先チャンネルの ID         |
+| `OPENAI_API_KEY`   | OpenAI API キー               |
 
 ---
 

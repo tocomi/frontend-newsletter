@@ -1,12 +1,13 @@
 # frontend-newsletter
 
-JavaScript Weekly と This Week in React の最新号を自動取得し、関連記事をピックアップ・要約して Slack に投稿する AI エージェント。
+JavaScript Weekly、This Week in React、はてなブックマーク テクノロジー人気エントリーを自動取得し、関連記事をピックアップ・要約して Slack に投稿する AI エージェント。
 
 [Mastra](https://mastra.ai) フレームワークと OpenAI を使って実装されており、各ニュースレターごとに専用のエージェントを持つ。
 
 ## 機能
 
 - RSS フィードからニュースレターの最新号を取得
+- はてなブックマーク テクノロジー人気エントリーから実務に有益な記事を抽出
 - 関連記事のフィルタリング（スポンサー・除外トピックを除去）
 - 各記事の本文をスクレイピングして取得
 - OpenAI による日本語要約とおすすめ度（★ 5段階）の判定
@@ -14,10 +15,11 @@ JavaScript Weekly と This Week in React の最新号を自動取得し、関連
 
 ## 対応ニュースレター
 
-| ニュースレター | エージェント |
-|---|---|
-| [JavaScript Weekly](https://javascriptweekly.com) | `javascript-weekly-agent` |
-| [This Week in React](https://thisweekinreact.com) | `this-week-in-react-agent` |
+| ニュースレター                                                        | エージェント               |
+| --------------------------------------------------------------------- | -------------------------- |
+| [JavaScript Weekly](https://javascriptweekly.com)                     | `javascript-weekly-agent`  |
+| [This Week in React](https://thisweekinreact.com)                     | `this-week-in-react-agent` |
+| [はてなブックマーク テクノロジー](https://b.hatena.ne.jp/hotentry/it) | `hatena-bookmark-agent`    |
 
 ## セットアップ
 
@@ -55,6 +57,9 @@ pnpm run:js-weekly
 
 # This Week in React
 pnpm run:react
+
+# はてなブックマーク テクノロジー
+pnpm run:hatena
 ```
 
 投稿が成功すると、設定した Slack チャンネルに親メッセージと各記事のスレッドが届く。

@@ -12,6 +12,7 @@ import { weatherWorkflow } from './workflows/weather-workflow'
 import { weatherAgent } from './agents/weather-agent'
 import { javascriptWeeklyAgent } from './agents/javascript-weekly-agent'
 import { thisWeekInReactAgent } from './agents/this-week-in-react-agent'
+import { hatenaBookmarkAgent } from './agents/hatena-bookmark-agent'
 import {
   toolCallAppropriatenessScorer,
   completenessScorer,
@@ -25,7 +26,7 @@ const storage = new LibSQLStore({
 
 export const mastra = new Mastra({
   workflows: { weatherWorkflow },
-  agents: { weatherAgent, javascriptWeeklyAgent, thisWeekInReactAgent },
+  agents: { weatherAgent, javascriptWeeklyAgent, thisWeekInReactAgent, hatenaBookmarkAgent },
   memory: {
     default: new Memory({ storage }),
   },
@@ -43,13 +44,8 @@ export const mastra = new Mastra({
     configs: {
       default: {
         serviceName: 'mastra',
-        exporters: [
-          new DefaultExporter(),
-          new CloudExporter(),
-        ],
-        spanOutputProcessors: [
-          new SensitiveDataFilter(),
-        ],
+        exporters: [new DefaultExporter(), new CloudExporter()],
+        spanOutputProcessors: [new SensitiveDataFilter()],
       },
     },
   }),
